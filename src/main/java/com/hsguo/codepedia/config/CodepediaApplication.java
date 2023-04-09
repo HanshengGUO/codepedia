@@ -1,5 +1,6 @@
 package com.hsguo.codepedia.config;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -9,6 +10,7 @@ import org.springframework.core.env.Environment;
 
 @ComponentScan("com.hsguo")
 @SpringBootApplication
+@MapperScan("com.hsguo.codepedia.mapper") // 扫描全部的数据库mapper
 public class CodepediaApplication {
     private static final Logger LOG = LoggerFactory.getLogger(CodepediaApplication.class);
     public static void main(String[] args) {
