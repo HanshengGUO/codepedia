@@ -1,6 +1,7 @@
 package com.hsguo.codepedia.controller;
 
 import com.hsguo.codepedia.domain.Demo;
+import com.hsguo.codepedia.resp.CommonResp;
 import com.hsguo.codepedia.service.DemoService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,10 @@ public class DemoController {
     private DemoService demoService;
 
     @GetMapping("/list")
-    public List<Demo> list(){
-        return demoService.list();
+    public CommonResp list(){
+        CommonResp<List<Demo>> resp = new CommonResp<>();
+        List<Demo> list = demoService.list();
+        resp.setContent(list);
+        return resp;
     }
 }
