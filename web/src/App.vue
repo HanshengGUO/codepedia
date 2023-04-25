@@ -7,20 +7,20 @@
   <a-layout>
     <the-header/>
     <router-view/>
-    <a-layout-footer style="text-align: center">
-      Codepedia ©2023 Created by Hansheng Guo
-    </a-layout-footer>
+    <the-footer/>
   </a-layout>
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue';
 import theHeader from "@/components/the-header.vue";
+import theFooter from "@/components/the-footer.vue";
 
 export default defineComponent({
   name: 'app',
   components: {
     theHeader,
+    theFooter,
   }
 });
 </script>
