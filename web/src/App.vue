@@ -5,32 +5,25 @@
 <!--  </div>-->
 <!--  <router-view/>-->
   <a-layout>
-    <a-layout-header class="header">
-      <div class="logo" />
-      <a-menu
-          v-model:selectedKeys="selectedKeys1"
-          theme="dark"
-          mode="horizontal"
-          :style="{ lineHeight: '64px' }"
-      >
-        <a-menu-item key="1">nav 1</a-menu-item>
-        <a-menu-item key="2">nav 2</a-menu-item>
-        <a-menu-item key="3">nav 3</a-menu-item>
-      </a-menu>
-    </a-layout-header>
-    <a-layout-content style="padding: 0 50px">
-      <a-breadcrumb style="margin: 16px 0">
-        <a-breadcrumb-item>Home</a-breadcrumb-item>
-        <a-breadcrumb-item>List</a-breadcrumb-item>
-        <a-breadcrumb-item>App</a-breadcrumb-item>
-      </a-breadcrumb>
-      <router-view/>
-    </a-layout-content>
+    <the-header/>
+    <router-view/>
     <a-layout-footer style="text-align: center">
       Codepedia ©2023 Created by Hansheng Guo
     </a-layout-footer>
   </a-layout>
 </template>
+
+<script lang="ts">
+import {defineComponent} from 'vue';
+import theHeader from "@/components/the-header.vue";
+
+export default defineComponent({
+  name: 'app',
+  components: {
+    theHeader,
+  }
+});
+</script>
 
 <style>
 #components-layout-demo-top-side .logo {
