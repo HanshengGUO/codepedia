@@ -100,7 +100,7 @@ export default defineComponent({
     const ebooks1 = reactive({books: []});
     // 生命周期Hook函数
     onMounted(() => {
-      axios.get("http://localhost:8080/ebook/list").then(
+      axios.get("/ebook/list").then(
           (response) => {
             const data = response.data;
             ebooks1.books = data.content;
