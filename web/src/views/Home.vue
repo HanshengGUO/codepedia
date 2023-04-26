@@ -51,13 +51,16 @@
       </a-menu>
     </a-layout-sider>
     <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
-      Content
+      <pre>
+{{ebooks}}
+        {{books}}
+      </pre>
     </a-layout-content>
   </a-layout>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {defineComponent, onMounted, reactive, ref, toRef} from 'vue';
 import axios from 'axios';
 
 export default defineComponent({
@@ -65,11 +68,23 @@ export default defineComponent({
   // 组件加载完成后初始执行的方法
   setup() {
     console.log("setup invoked");
-    axios.get("http://localhost:8080/ebook/list?name=Spring").then(
-        (response) => {
-          console.log(response);
-        }
-    )
+    const ebooks = ref();
+    const ebooks1 = reactive({books: []});
+    // 生命周期Hook函数
+    onMounted(() => {
+      axios.get("http://localhost:8080/ebook/list?name=Spring").then(
+          (response) => {
+            const data = response.data;
+            ebooks1.books = data.content;
+            ebooks.value = data.content;
+          }
+      );
+    })
+
+    return {
+      ebooks,
+      books: toRef(ebooks1, "books")
+    }
   }
 });
 </script>
