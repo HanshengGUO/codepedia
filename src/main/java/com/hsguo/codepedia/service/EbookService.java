@@ -7,6 +7,7 @@ import com.hsguo.codepedia.req.EbookReq;
 import com.hsguo.codepedia.resp.EbookResp;
 import com.hsguo.codepedia.utils.CopyUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -22,7 +23,8 @@ public class EbookService {
     public List<EbookResp> list(EbookReq req){
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
-        criteria.andNameLike("%" + req.getName() + "%");
+        if (!ObjectUtils.isEmpty(req.getName()))
+            criteria.andNameLike("%" + req.getName() + "%");
         List<Ebook> ebooksList = ebookMapper.selectByExample(ebookExample);
         // null 相当于 new EbookExample()
         List<EbookResp> ebooksRespList = CopyUtil.copyList(ebooksList, EbookResp.class);
