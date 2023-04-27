@@ -16,17 +16,25 @@
         </template>
         <template v-slot:action="{ text, record }">
           <a-space size="small">
-            <a-button type="primary">
-              编辑
+            <a-button type="primary" @click="edit">
+              edit
             </a-button>
             <a-button type="danger">
-              删除
+              delete
             </a-button>
           </a-space>
         </template>
       </a-table>
     </a-layout-content>
   </a-layout>
+  <a-modal
+      title="ebook-modal"
+      v-model:visible="modalVisible"
+      :confirm-loading="modalLoading"
+      @ok="handleModalOk"
+  >
+    <p>test</p>
+  </a-modal>
 </template>
 
 <script lang="ts">
@@ -114,6 +122,21 @@ export default defineComponent({
       });
     };
 
+    const modalVisible = ref<boolean>(false);
+    const modalLoading = ref<boolean>(false);
+
+    const edit = () => {
+      modalVisible.value = true;
+    };
+
+    const handleModalOk = () => {
+      modalLoading.value = true;
+      setTimeout(() => {
+        modalVisible.value = false;
+        modalLoading.value = false;
+      }, 2000);
+    };
+
     onMounted(() => {
       handleQuery({
         page: 1,
@@ -126,7 +149,12 @@ export default defineComponent({
       pagination,
       columns,
       loading,
-      handleTableChange
+      handleTableChange,
+      // modal related
+      edit,
+      modalVisible,
+      modalLoading,
+      handleModalOk
     }
   }
 });
