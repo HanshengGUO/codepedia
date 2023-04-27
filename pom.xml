@@ -46,7 +46,7 @@
             <version>8.0.22</version>
         </dependency>
 
-<!--        集成AOP-->
+        <!--        集成AOP-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
@@ -68,11 +68,18 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
-<!--        用jsonobject做字段处理-->
+        <!--        用jsonobject做字段处理-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.70</version>
+        </dependency>
+
+        <!-- pagehelper 插件-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.13</version>
         </dependency>
     </dependencies>
 
