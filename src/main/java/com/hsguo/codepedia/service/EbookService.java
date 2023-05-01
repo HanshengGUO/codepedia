@@ -5,10 +5,12 @@ import com.github.pagehelper.PageInfo;
 import com.hsguo.codepedia.domain.Ebook;
 import com.hsguo.codepedia.domain.EbookExample;
 import com.hsguo.codepedia.mapper.EbookMapper;
-import com.hsguo.codepedia.req.EbookReq;
-import com.hsguo.codepedia.resp.EbookResp;
+import com.hsguo.codepedia.req.EbookQueryReq;
+import com.hsguo.codepedia.req.EbookSaveReq;
+import com.hsguo.codepedia.resp.EbookQueryResp;
 import com.hsguo.codepedia.resp.PageResp;
 import com.hsguo.codepedia.utils.CopyUtil;
+import com.hsguo.codepedia.utils.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,10 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq req) {
+    @Resource
+    private SnowFlake snowFlake;
+
+    public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName()))
@@ -40,9 +45,9 @@ public class EbookService {
         LOG.info("总行数：{}", pageInfo.getTotal());
         LOG.info("总页数：{}", pageInfo.getPages());
 
-        PageResp<EbookResp> objectPageResp = new PageResp<EbookResp>();
+        PageResp<EbookQueryResp> objectPageResp = new PageResp<EbookQueryResp>();
         // null 相当于 new EbookExample()
-        List<EbookResp> ebooksRespList = CopyUtil.copyList(ebooksList, EbookResp.class);
+        List<EbookQueryResp> ebooksRespList = CopyUtil.copyList(ebooksList, EbookQueryResp.class);
 //        List<EbookResp> ebooksRespList = new ArrayList<>();
 //        for (Ebook ebook : ebooksList) {
 //            EbookResp ebookResp = new EbookResp();
@@ -52,5 +57,27 @@ public class EbookService {
         objectPageResp.setTotal(pageInfo.getTotal());
         objectPageResp.setList(ebooksRespList);
         return objectPageResp;
+    }
+
+    /**
+     * 保存更新数据
+     */
+    public void save(EbookSaveReq req) {
+        Ebook ebook = CopyUtil.copy(req, Ebook.class);
+        if (ObjectUtils.isEmpty(req.getId())) {
+            // 新增
+            ebook.setId(snowFlake.nextId());
+            ebook.setDocCount(0);
+            ebook.setViewCount(0);
+            ebook.setVoteCount(0);
+            ebookMapper.insert(ebook);
+        } else {
+            // 更新
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
+    }
+
+    public void delete(Long id) {
+        ebookMapper.deleteByPrimaryKey(id);
     }
 }
