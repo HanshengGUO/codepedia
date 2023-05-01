@@ -33,7 +33,7 @@ public class EbookController {
     // 如果是form表单提交，就不需要添加这个注解
     // 更新类的一般用post
     @PostMapping("/save")
-    public CommonResp save(@RequestBody EbookSaveReq req) {
+    public CommonResp save(@Valid @RequestBody EbookSaveReq req) {
         CommonResp resp = new CommonResp<>();
         ebookService.save(req);
         return resp;

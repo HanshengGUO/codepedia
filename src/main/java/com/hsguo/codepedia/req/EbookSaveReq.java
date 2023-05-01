@@ -1,8 +1,11 @@
 package com.hsguo.codepedia.req;
 
+import javax.validation.constraints.NotNull;
+
 public class EbookSaveReq {
     private Long id;
 
+    @NotNull(message = "Name cannot be null!")
     private String name;
 
     private Long category1Id;
