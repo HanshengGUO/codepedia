@@ -96,6 +96,18 @@ export default defineComponent({
           level1.value = [];
           level1.value = Tool.array2Tree(categorys, 0);
           console.log("树形结构：", level1.value);
+
+          axios.get("/ebook/list", {
+            params: {
+              page: 1,
+              size: 1000, // 主页不用分页
+            }
+          }).then(
+              (response) => {
+                const data = response.data;
+                ebooks.value = data.content.list;
+              }
+          );
         } else {
           message.error(data.message);
         }
@@ -108,17 +120,6 @@ export default defineComponent({
     // 生命周期Hook函数
     onMounted(() => {
       handleQueryCategory();
-      axios.get("/ebook/list", {
-        params: {
-          page: 1,
-          size: 1000, // 主页不用分页
-        }
-      }).then(
-          (response) => {
-            const data = response.data;
-            ebooks.value = data.content.list;
-          }
-      );
     })
 
     return {
