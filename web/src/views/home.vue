@@ -12,10 +12,8 @@
           @click="handleClick"
       >
         <a-menu-item key="welcome">
-          <router-link :to="'/'">
-            <MailOutlined/>
-            <span>Welcome</span>
-          </router-link>
+          <MailOutlined/>
+          <span>Welcome</span>
         </a-menu-item>
         <a-sub-menu v-for="item in level1" :key="item.id">
           <template v-slot:title>
@@ -29,7 +27,10 @@
       </a-menu>
     </a-layout-sider>
     <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
-      <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3}"
+      <div class="welcome" v-show="isShowWelcome">
+        <h1>Welcome to Codepedia!</h1>
+      </div>
+      <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3}"
               :data-source="ebooks">
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
@@ -83,6 +84,8 @@ export default defineComponent({
 
     const level1 = ref();
     let categorys: any;
+
+    const isShowWelcome = ref(true);
     /**
      * 查询所有分类
      **/
@@ -114,8 +117,12 @@ export default defineComponent({
       });
     };
 
-    const handleClick = () => {
-      console.log("menu click")
+    const handleClick = (value: any) => {
+      if (value.key === 'welcome') {
+        isShowWelcome.value = true;
+      } else {
+        isShowWelcome.value = false;
+      }
     };
     // 生命周期Hook函数
     onMounted(() => {
@@ -137,6 +144,7 @@ export default defineComponent({
       ],
       level1,
       handleClick,
+      isShowWelcome,
     }
   }
 });
