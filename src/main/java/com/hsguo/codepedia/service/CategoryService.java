@@ -33,6 +33,7 @@ public class CategoryService {
 
     public PageResp<CategoryQueryResp> list(CategoryQueryReq req) {
         CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
         CategoryExample.Criteria criteria = categoryExample.createCriteria();
         // 只对第一次查询的sql有效，所以尽量和查询语句放在一起
         // 分页的基础数据四条，返回给前端计算
@@ -55,6 +56,33 @@ public class CategoryService {
         objectPageResp.setTotal(pageInfo.getTotal());
         objectPageResp.setList(categorysRespList);
         return objectPageResp;
+    }
+
+    public List<CategoryQueryResp> all() {
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
+//        CategoryExample.Criteria criteria = categoryExample.createCriteria();
+        // 只对第一次查询的sql有效，所以尽量和查询语句放在一起
+        // 分页的基础数据四条，返回给前端计算
+//        PageHelper.startPage(req.getPage(), req.getSize());
+        List<Category> categorysList = categoryMapper.selectByExample(categoryExample);
+
+//        PageInfo<Category> pageInfo = new PageInfo<>(categorysList);
+//        LOG.info("总行数：{}", pageInfo.getTotal());
+//        LOG.info("总页数：{}", pageInfo.getPages());
+//
+//        PageResp<CategoryQueryResp> objectPageResp = new PageResp<CategoryQueryResp>();
+        // null 相当于 new CategoryExample()
+        List<CategoryQueryResp> categorysRespList = CopyUtil.copyList(categorysList, CategoryQueryResp.class);
+//        List<CategoryResp> categorysRespList = new ArrayList<>();
+//        for (Category category : categorysList) {
+//            CategoryResp categoryResp = new CategoryResp();
+//            BeanUtils.copyProperties(category, categoryResp);
+//            categorysRespList.add(categoryResp);
+//        }
+//        objectPageResp.setTotal(pageInfo.getTotal());
+//        objectPageResp.setList(categorysRespList);
+        return categorysRespList;
     }
 
     /**

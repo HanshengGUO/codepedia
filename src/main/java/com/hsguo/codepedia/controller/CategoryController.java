@@ -1,15 +1,14 @@
 package com.hsguo.codepedia.controller;
 
-import com.hsguo.codepedia.req.CategoryQueryReq;
 import com.hsguo.codepedia.req.CategorySaveReq;
 import com.hsguo.codepedia.resp.CategoryQueryResp;
 import com.hsguo.codepedia.resp.CommonResp;
-import com.hsguo.codepedia.resp.PageResp;
 import com.hsguo.codepedia.service.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /*
 RestController 返回一个字符串
@@ -21,10 +20,18 @@ public class CategoryController {
     @Resource
     private CategoryService categoryService;
 
-    @GetMapping("/list")
-    public CommonResp list(@Valid CategoryQueryReq req) {
-        CommonResp<PageResp<CategoryQueryResp>> resp = new CommonResp<>();
-        PageResp<CategoryQueryResp> list = categoryService.list(req);
+//    @GetMapping("/list")
+//    public CommonResp list(@Valid CategoryQueryReq req) {
+//        CommonResp<PageResp<CategoryQueryResp>> resp = new CommonResp<>();
+//        PageResp<CategoryQueryResp> list = categoryService.list(req);
+//        resp.setContent(list);
+//        return resp;
+//    }
+
+    @GetMapping("/all")
+    public CommonResp all() {
+        CommonResp<List<CategoryQueryResp>> resp = new CommonResp<>();
+        List<CategoryQueryResp> list = categoryService.all();
         resp.setContent(list);
         return resp;
     }
