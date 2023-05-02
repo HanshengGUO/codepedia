@@ -17,3 +17,7 @@ GET http://localhost:8080/ebook/list?page=1&size=1010
 GET http://localhost:8080/category/list?page=1&size=4
 
 ###
+
+GET http://localhost:8080/ebook/list?page=1&size=1000&categoryId2=101
+
+###

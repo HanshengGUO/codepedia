@@ -36,6 +36,8 @@ public class EbookService {
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName()))
             criteria.andNameLike("%" + req.getName() + "%");
+        if (!ObjectUtils.isEmpty(req.getCategoryId2()))
+            criteria.andCategory2IdEqualTo(req.getCategoryId2());
         // 只对第一次查询的sql有效，所以尽量和查询语句放在一起
         // 分页的基础数据四条，返回给前端计算
         PageHelper.startPage(req.getPage(), req.getSize());

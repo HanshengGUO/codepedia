@@ -86,6 +86,23 @@ export default defineComponent({
     let categorys: any;
 
     const isShowWelcome = ref(true);
+    let categoryId2 = 0;
+
+    const handleQueryEbook = () => {
+      console.log(categoryId2);
+      axios.get("/ebook/list", {
+        params: {
+          page: 1,
+          size: 1000, // 主页不用分页
+          categoryId2: categoryId2,
+        }
+      }).then(
+          (response) => {
+            const data = response.data;
+            ebooks.value = data.content.list;
+          }
+      );
+    }
     /**
      * 查询所有分类
      **/
@@ -99,29 +116,21 @@ export default defineComponent({
           level1.value = [];
           level1.value = Tool.array2Tree(categorys, 0);
           console.log("树形结构：", level1.value);
-
-          axios.get("/ebook/list", {
-            params: {
-              page: 1,
-              size: 1000, // 主页不用分页
-            }
-          }).then(
-              (response) => {
-                const data = response.data;
-                ebooks.value = data.content.list;
-              }
-          );
+          handleQueryEbook();
         } else {
           message.error(data.message);
         }
       });
     };
 
+
     const handleClick = (value: any) => {
       if (value.key === 'welcome') {
         isShowWelcome.value = true;
       } else {
+        categoryId2 = value.key;
         isShowWelcome.value = false;
+        handleQueryEbook();
       }
     };
     // 生命周期Hook函数
