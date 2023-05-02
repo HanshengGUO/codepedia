@@ -1,6 +1,6 @@
 <template>
   <a-layout-header class="header">
-    <div class="logo" />
+    <div class="logo"/>
     <a-menu
         v-model:selectedKeys="selectedKeys1"
         theme="dark"
@@ -18,6 +18,11 @@
         </router-link>
       </a-menu-item>
       <a-menu-item key="3">
+        <router-link to="/admin/category">
+          Category
+        </router-link>
+      </a-menu-item>
+      <a-menu-item key="4">
         <router-link to="/about">
           about
         </router-link>
