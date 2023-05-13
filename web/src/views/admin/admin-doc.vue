@@ -195,7 +195,8 @@ export default defineComponent({
 
     const modalVisible = ref<boolean>(false);
     const modalLoading = ref<boolean>(false);
-    const doc = ref({});
+    const doc = ref();
+    doc.value = {};
 
     /**
      * 将某节点及其子孙节点全部置为disabled
@@ -317,6 +318,8 @@ export default defineComponent({
 
     const handleSave = () => {
       modalLoading.value = true;
+      const editor = editorRef.value;
+      doc.value.content = editor.getHtml();
       axios.post("/doc/save", doc.value).then((response) => {
         modalLoading.value = false;
         const data = response.data; // CommonResp

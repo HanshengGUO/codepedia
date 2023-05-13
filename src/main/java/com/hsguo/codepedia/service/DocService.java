@@ -2,8 +2,10 @@ package com.hsguo.codepedia.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.hsguo.codepedia.domain.Content;
 import com.hsguo.codepedia.domain.Doc;
 import com.hsguo.codepedia.domain.DocExample;
+import com.hsguo.codepedia.mapper.ContentMapper;
 import com.hsguo.codepedia.mapper.DocMapper;
 import com.hsguo.codepedia.req.DocQueryReq;
 import com.hsguo.codepedia.req.DocSaveReq;
@@ -27,6 +29,9 @@ public class DocService {
     // Autowired是来自Spring
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private ContentMapper contentMapper;
 
     @Resource
     private SnowFlake snowFlake;
@@ -90,6 +95,7 @@ public class DocService {
      */
     public void save(DocSaveReq req) {
         Doc doc = CopyUtil.copy(req, Doc.class);
+        Content content = CopyUtil.copy(req, Content.class);
         if (ObjectUtils.isEmpty(req.getId())) {
             // 新增
             doc.setId(snowFlake.nextId());
@@ -97,9 +103,15 @@ public class DocService {
 //            doc.setViewCount(0);
 //            doc.setVoteCount(0);
             docMapper.insert(doc);
+            content.setId(doc.getId());
+            contentMapper.insert(content);
         } else {
             // 更新
             docMapper.updateByPrimaryKey(doc);
+            int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
+            if (count == 0) {
+                contentMapper.insert(content);
+            }
         }
     }
 
