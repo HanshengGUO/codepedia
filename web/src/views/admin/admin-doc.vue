@@ -189,6 +189,22 @@ export default defineComponent({
       });
     };
 
+    /**
+     * 内容查询
+     **/
+    const handleQueryContent = () => {
+      axios.get("/doc/find-content/" + doc.value.id).then((response) => {
+        const data = response.data;
+
+        if (data.success) {
+          const editor = editorRef.value;
+          editor.setHtml(data.content);
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
     // 为树选择组件定义的value
     const treeSelectData = ref();
     treeSelectData.value = [];
@@ -268,6 +284,7 @@ export default defineComponent({
       modalVisible.value = true;
       doc.value = Tool.copy(record);
 
+      handleQueryContent();
       // 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
       treeSelectData.value = Tool.copy(level1.value);
       setDisable(treeSelectData.value, record.id);
