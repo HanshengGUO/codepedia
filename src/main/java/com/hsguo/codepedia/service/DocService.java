@@ -63,8 +63,9 @@ public class DocService {
         return objectPageResp;
     }
 
-    public List<DocQueryResp> all() {
+    public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
+        docExample.createCriteria().andEbookIdEqualTo(ebookId);
         docExample.setOrderByClause("sort asc");
 //        DocExample.Criteria criteria = docExample.createCriteria();
         // 只对第一次查询的sql有效，所以尽量和查询语句放在一起

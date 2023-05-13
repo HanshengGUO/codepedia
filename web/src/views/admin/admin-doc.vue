@@ -81,6 +81,12 @@
               <a-input v-model:value="doc.sort" placeholder="顺序"/>
             </a-form-item>
             <a-form-item>
+              <a-button type="primary" @click="handlePreviewContent()">
+                <EyeOutlined/>
+                内容预览
+              </a-button>
+            </a-form-item>
+            <a-form-item>
               <div id="content" style="border: 1px solid #ccc">
                 <Toolbar
                     style="border-bottom: 1px solid #ccc"
@@ -100,6 +106,10 @@
           </a-form>
         </a-col>
       </a-row>
+
+      <a-drawer width="900" placement="right" :closable="false" :visible="drawerVisible" @close="onDrawerClose">
+        <div class="wangeditor" :innerHTML="previewHtml"></div>
+      </a-drawer>
 
     </a-layout-content>
   </a-layout>
@@ -132,6 +142,10 @@ export default defineComponent({
 
     const docs = ref();
     const loading = ref(false);
+
+    // 因为树选择组件的属性状态，会随当前编辑的节点而变化，所以单独声明一个响应式变量
+    const treeSelectData = ref();
+    treeSelectData.value = [];
 
     // 编辑器实例，必须用 shallowRef
     const editorRef = shallowRef()
@@ -173,7 +187,7 @@ export default defineComponent({
       loading.value = true;
       // Update the level 1 in every refresh
       level1.value = [];
-      axios.get("/doc/all").then((response) => {
+      axios.get("/doc/all/" + route.query.ebookId).then((response) => {
         loading.value = false;
         const data = response.data;
 
@@ -181,6 +195,11 @@ export default defineComponent({
           docs.value = data.content;
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value, 0);
+
+          // 父文档下拉框初始化，相当于点击新增
+          treeSelectData.value = Tool.copy(level1.value);
+          // 为选择树添加一个"无"
+          treeSelectData.value.unshift({id: 0, name: '无'});
         } else {
           message.error(data.message);
         }
@@ -205,14 +224,12 @@ export default defineComponent({
       });
     };
 
-    // 为树选择组件定义的value
-    const treeSelectData = ref();
-    treeSelectData.value = [];
-
     const modalVisible = ref<boolean>(false);
     const modalLoading = ref<boolean>(false);
     const doc = ref();
-    doc.value = {};
+    doc.value = {
+      ebookId: route.query.ebookId
+    };
 
     /**
      * 将某节点及其子孙节点全部置为disabled
@@ -350,6 +367,19 @@ export default defineComponent({
       });
     };
 
+    // ----------------富文本预览--------------
+    const drawerVisible = ref(false);
+    const previewHtml = ref();
+    const handlePreviewContent = () => {
+      const editor = editorRef.value;
+      const html = editor.getHtml();
+      previewHtml.value = html;
+      drawerVisible.value = true;
+    };
+    const onDrawerClose = () => {
+      drawerVisible.value = false;
+    };
+
     onMounted(() => {
       handleQuery();
     });
@@ -367,6 +397,11 @@ export default defineComponent({
       add,
       handleDelete,
       treeSelectData,
+      drawerVisible,
+      previewHtml,
+      handlePreviewContent,
+      onDrawerClose,
+
 
       modalVisible,
       modalLoading,
