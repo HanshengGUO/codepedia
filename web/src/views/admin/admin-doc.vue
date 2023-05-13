@@ -54,44 +54,61 @@
       :confirm-loading="modalLoading"
       @ok="handleModalOk"
   >
-    <p>
-      <a-form :model="doc" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-        <a-form-item label="名称">
-          <a-input v-model:value="doc.name"/>
+    <a-form :model="doc" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+      <a-form-item label="名称">
+        <a-input v-model:value="doc.name"/>
 
-        </a-form-item>
-        <a-form-item label="父文档">
-          <!--          <a-input v-model:value="doc.parent"/>-->
-          <a-tree-select
-              v-model:value="doc.parent"
-              style="width: 100%"
-              :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-              :tree-data="treeSelectData"
-              placeholder="Choose the parent doc"
-              tree-default-expand-all
-              :fieldNames="{label: 'name', key: 'id', value: 'id'}"
-          >
-          </a-tree-select>
-        </a-form-item>
-        <a-form-item label="顺序">
-          <a-input v-model:value="doc.sort"/>
-        </a-form-item>
-      </a-form>
-    </p>
+      </a-form-item>
+      <a-form-item label="父文档">
+        <!--          <a-input v-model:value="doc.parent"/>-->
+        <a-tree-select
+            v-model:value="doc.parent"
+            style="width: 100%"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            :tree-data="treeSelectData"
+            placeholder="Choose the parent doc"
+            tree-default-expand-all
+            :fieldNames="{label: 'name', key: 'id', value: 'id'}"
+        >
+        </a-tree-select>
+      </a-form-item>
+      <a-form-item label="顺序">
+        <a-input v-model:value="doc.sort"/>
+      </a-form-item>
+      <a-form-item label="内容">
+        <div id="content">
+          <Toolbar
+              :editor="editorRef"
+              :defaultConfig="toolbarConfig"
+              :mode="mode"
+          />
+          <Editor
+              v-model="valueHtml"
+              :defaultConfig="editorConfig"
+              :mode="mode"
+              @onCreated="handleCreated"
+          />
+        </div>
+      </a-form-item>
+    </a-form>
 
   </a-modal>
 </template>
 
 <script lang="ts">
-import {createVNode, defineComponent, onMounted, ref} from 'vue';
+import {createVNode, defineComponent, onBeforeUnmount, onMounted, ref, shallowRef} from 'vue';
 import axios from 'axios';
 import {message, Modal} from "ant-design-vue";
 import {Tool} from "@/utils/tool";
 import {useRoute} from "vue-router";
 import {ExclamationCircleOutlined} from "@ant-design/icons-vue";
+import '@wangeditor/editor/dist/css/style.css' // 引入 css
+import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 
 export default defineComponent({
   name: 'AdminDoc',
+  // wangEditor
+  components: {Editor, Toolbar},
   setup: function () {
     const route = useRoute();
     const param = ref();
@@ -100,6 +117,23 @@ export default defineComponent({
     const docs = ref();
     const loading = ref(false);
 
+    // 编辑器实例，必须用 shallowRef
+    const editorRef = shallowRef()
+    // 内容 HTML
+    const valueHtml = ref('<p>hello</p>')
+
+    const toolbarConfig = {}
+    const editorConfig = {placeholder: '请输入内容...'}
+
+    onBeforeUnmount(() => {
+      const editor = editorRef.value
+      if (editor == null) return
+      editor.destroy()
+    })
+
+    const handleCreated = (editor: any) => {
+      editorRef.value = editor // 记录 editor 实例，重要！
+    }
 
     const columns = [
       {
@@ -248,6 +282,8 @@ export default defineComponent({
 
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({id: 0, name: '无'});
+
+
     };
 
     const handleDelete = (id: number) => {
@@ -306,7 +342,15 @@ export default defineComponent({
 
       modalVisible,
       modalLoading,
-      handleModalOk
+      handleModalOk,
+
+      // editor
+      editorRef,
+      valueHtml,
+      mode: 'default', // 或 'simple'
+      toolbarConfig,
+      editorConfig,
+      handleCreated
     }
   }
 });
