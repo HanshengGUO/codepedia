@@ -80,7 +80,10 @@ public class UserService {
 
         } else {
             // 更新
-            userMapper.updateByPrimaryKey(user);
+            // 先清空loginName
+            user.setLoginName(null);
+            // 这里不更新为null的字段
+            userMapper.updateByPrimaryKeySelective(user);
         }
     }
 
