@@ -25,6 +25,8 @@
                         connectionURL="jdbc:mysql://hk-cdb-fvcftpc5.sql.tencentcdb.com:63973/codepedia"
                         userId="root"
                         password="Abcdefg12345">
+            <!--解决mysql驱动升级到8.0后不生成指定数据库代码的问题-->
+            <property name="nullCatalogMeansCurrent" value="true"/>
         </jdbcConnection>
 
         <!-- domain类的位置 -->
