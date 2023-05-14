@@ -14,7 +14,7 @@ public class UserSaveReq {
     private String name;
 
     @NotNull(message = "[Password] cannot be null!")
-    @Length(min = 6, max = 20, message = "Password should have length of 6 - 20!")
+    @Length(min = 6, max = 32, message = "Password should have length of 6 - 32!")
     private String password;
 
     public Long getId() {

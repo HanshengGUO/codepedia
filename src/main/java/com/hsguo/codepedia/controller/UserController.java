@@ -6,6 +6,7 @@ import com.hsguo.codepedia.resp.CommonResp;
 import com.hsguo.codepedia.resp.PageResp;
 import com.hsguo.codepedia.resp.UserQueryResp;
 import com.hsguo.codepedia.service.UserService;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -34,6 +35,7 @@ public class UserController {
     // 更新类的一般用post
     @PostMapping("/save")
     public CommonResp save(@Valid @RequestBody UserSaveReq req) {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.save(req);
         return resp;
