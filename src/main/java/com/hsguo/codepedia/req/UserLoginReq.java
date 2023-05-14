@@ -2,13 +2,13 @@ package com.hsguo.codepedia.req;
 
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 public class UserLoginReq {
-    @NotNull(message = "[Login Name] cannot be null!")
+    @NotEmpty(message = "[Login Name] cannot be null!")
     private String loginName;
 
-    @NotNull(message = "[Password] cannot be null!")
+    @NotEmpty(message = "[Password] cannot be null!")
     @Length(min = 6, max = 32, message = "Password is not correct!")
     private String password;
 

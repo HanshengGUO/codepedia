@@ -1,5 +1,6 @@
 package com.hsguo.codepedia.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hsguo.codepedia.req.UserLoginReq;
 import com.hsguo.codepedia.req.UserQueryReq;
 import com.hsguo.codepedia.req.UserResetPasswordReq;
@@ -9,11 +10,17 @@ import com.hsguo.codepedia.resp.PageResp;
 import com.hsguo.codepedia.resp.UserLoginResp;
 import com.hsguo.codepedia.resp.UserQueryResp;
 import com.hsguo.codepedia.service.UserService;
+import com.hsguo.codepedia.utils.SnowFlake;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.concurrent.TimeUnit;
+
 
 /*
 RestController 返回一个字符串
@@ -22,8 +29,17 @@ Controller 返回一个页面
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+
     @Resource
     private UserService userService;
+
+    @Resource
+    private RedisTemplate redisTemplate;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     @GetMapping("/list")
     public CommonResp list(@Valid UserQueryReq req) {
@@ -57,6 +73,12 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         UserLoginResp userLoginResp = userService.login(req);
+
+        // 生成单点登录token，并且放到redis中
+        Long token = snowFlake.nextId();
+        LOG.info("生成单点登录token:{}，并且放到redis中", token);
+        userLoginResp.setToken(token.toString());
+        redisTemplate.opsForValue().set(token, JSONObject.toJSONString(userLoginResp), 3600 * 24, TimeUnit.SECONDS);
         resp.setContent(userLoginResp);
         return resp;
     }
