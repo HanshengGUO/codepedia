@@ -82,6 +82,7 @@ public class UserService {
             // 更新
             // 先清空loginName
             user.setLoginName(null);
+            user.setPassword(null);
             // 这里不更新为null的字段
             userMapper.updateByPrimaryKeySelective(user);
         }
