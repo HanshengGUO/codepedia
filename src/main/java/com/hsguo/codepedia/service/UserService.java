@@ -7,10 +7,12 @@ import com.hsguo.codepedia.domain.UserExample;
 import com.hsguo.codepedia.exception.BusinessException;
 import com.hsguo.codepedia.exception.BusinessExceptionCode;
 import com.hsguo.codepedia.mapper.UserMapper;
+import com.hsguo.codepedia.req.UserLoginReq;
 import com.hsguo.codepedia.req.UserQueryReq;
 import com.hsguo.codepedia.req.UserResetPasswordReq;
 import com.hsguo.codepedia.req.UserSaveReq;
 import com.hsguo.codepedia.resp.PageResp;
+import com.hsguo.codepedia.resp.UserLoginResp;
 import com.hsguo.codepedia.resp.UserQueryResp;
 import com.hsguo.codepedia.utils.CopyUtil;
 import com.hsguo.codepedia.utils.SnowFlake;
@@ -95,6 +97,28 @@ public class UserService {
     public void resetPassword(UserResetPasswordReq req) {
         User user = CopyUtil.copy(req, User.class);
         userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    /**
+     * 登录
+     */
+    public UserLoginResp login(UserLoginReq req) {
+        User userDB = selectByLoginName(req.getLoginName());
+        if (ObjectUtils.isEmpty(userDB)) {
+            LOG.info("用户名不存在：{}", req.getLoginName());
+            // 用户名不存在
+            throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+        } else {
+            if (userDB.getPassword().equals(req.getPassword())) {
+                // 登陆成功
+                UserLoginResp userLoginResp = CopyUtil.copy(userDB, UserLoginResp.class);
+                return userLoginResp;
+            } else {
+                LOG.info("密码不正确，输入: {}，数据库密码: {}", req.getPassword(), userDB.getPassword());
+                // 密码错误
+                throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+            }
+        }
     }
 
     public void delete(Long id) {

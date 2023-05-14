@@ -1,10 +1,12 @@
 package com.hsguo.codepedia.controller;
 
+import com.hsguo.codepedia.req.UserLoginReq;
 import com.hsguo.codepedia.req.UserQueryReq;
 import com.hsguo.codepedia.req.UserResetPasswordReq;
 import com.hsguo.codepedia.req.UserSaveReq;
 import com.hsguo.codepedia.resp.CommonResp;
 import com.hsguo.codepedia.resp.PageResp;
+import com.hsguo.codepedia.resp.UserLoginResp;
 import com.hsguo.codepedia.resp.UserQueryResp;
 import com.hsguo.codepedia.service.UserService;
 import org.springframework.util.DigestUtils;
@@ -47,6 +49,15 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.resetPassword(req);
+        return resp;
+    }
+
+    @PostMapping("/login")
+    public CommonResp login(@Valid @RequestBody UserLoginReq req) {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp resp = new CommonResp<>();
+        UserLoginResp userLoginResp = userService.login(req);
+        resp.setContent(userLoginResp);
         return resp;
     }
 
