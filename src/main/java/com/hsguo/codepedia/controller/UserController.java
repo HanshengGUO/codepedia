@@ -1,6 +1,7 @@
 package com.hsguo.codepedia.controller;
 
 import com.hsguo.codepedia.req.UserQueryReq;
+import com.hsguo.codepedia.req.UserResetPasswordReq;
 import com.hsguo.codepedia.req.UserSaveReq;
 import com.hsguo.codepedia.resp.CommonResp;
 import com.hsguo.codepedia.resp.PageResp;
@@ -38,6 +39,14 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.save(req);
+        return resp;
+    }
+
+    @PostMapping("/reset-password")
+    public CommonResp resetPassword(@Valid @RequestBody UserResetPasswordReq req) {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp resp = new CommonResp<>();
+        userService.resetPassword(req);
         return resp;
     }
 

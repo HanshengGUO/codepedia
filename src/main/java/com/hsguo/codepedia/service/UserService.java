@@ -8,6 +8,7 @@ import com.hsguo.codepedia.exception.BusinessException;
 import com.hsguo.codepedia.exception.BusinessExceptionCode;
 import com.hsguo.codepedia.mapper.UserMapper;
 import com.hsguo.codepedia.req.UserQueryReq;
+import com.hsguo.codepedia.req.UserResetPasswordReq;
 import com.hsguo.codepedia.req.UserSaveReq;
 import com.hsguo.codepedia.resp.PageResp;
 import com.hsguo.codepedia.resp.UserQueryResp;
@@ -86,6 +87,14 @@ public class UserService {
             // 这里不更新为null的字段
             userMapper.updateByPrimaryKeySelective(user);
         }
+    }
+
+    /**
+     * 修改密码
+     */
+    public void resetPassword(UserResetPasswordReq req) {
+        User user = CopyUtil.copy(req, User.class);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
     public void delete(Long id) {
