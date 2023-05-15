@@ -6,6 +6,7 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import * as Icons from '@ant-design/icons-vue';
 import axios from "axios";
+import {Tool} from "@/utils/tool";
 
 axios.defaults.baseURL = process.env.VUE_APP_SERVER
 /**
@@ -13,18 +14,24 @@ axios.defaults.baseURL = process.env.VUE_APP_SERVER
  */
 axios.interceptors.request.use(function (config) {
     console.log('请求参数：', config);
-    // const token = store.state.user.token;
-    // if (Tool.isNotEmpty(token)) {
-    //     config.headers.token = token;
-    //     console.log("请求headers增加token:", token);
-    // }
+    const token = store.state.user.token;
+    if (Tool.isNotEmpty(token)) {
+        config.headers.token = token;
+        console.log("请求headers增加token:", token);
+    }
     return config;
 }, error => {
     return Promise.reject(error);
 });
-axios.interceptors.response.use(function (response) {
-    console.log('返回结果：', response);
-    return response;
+axios.interceptors.response.use(function (config) {
+    console.log('返回结果：', config);
+    // 使用拦截器，添加token到header中便于后端校验
+    const token = store.state.user.token;
+    if (Tool.isNotEmpty(token)) {
+        config.headers.token = token;
+        console.log("请求headers增加token:", token);
+    }
+    return config;
 }, error => {
     console.log('返回错误：', error);
     // const response = error.response;
