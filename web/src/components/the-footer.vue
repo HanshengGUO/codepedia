@@ -9,5 +9,8 @@ import {defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'the-footer',
+  setup() {
+    // const user = computed(() => store.state.user);
+  }
 });
 </script>
