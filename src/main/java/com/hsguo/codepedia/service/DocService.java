@@ -133,6 +133,10 @@ public class DocService {
         return content.getContent();
     }
 
+    public void vote(Long id) {
+        docMapperCustom.increaseVoteCount(id);
+    }
+
     public void delete(List<String> ids) {
         DocExample docExample = new DocExample();
         DocExample.Criteria criteria = docExample.createCriteria();
