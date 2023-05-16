@@ -7,6 +7,7 @@ import com.hsguo.codepedia.domain.Doc;
 import com.hsguo.codepedia.domain.DocExample;
 import com.hsguo.codepedia.mapper.ContentMapper;
 import com.hsguo.codepedia.mapper.DocMapper;
+import com.hsguo.codepedia.mapper.DocMapperCustom;
 import com.hsguo.codepedia.req.DocQueryReq;
 import com.hsguo.codepedia.req.DocSaveReq;
 import com.hsguo.codepedia.resp.DocQueryResp;
@@ -29,6 +30,9 @@ public class DocService {
     // Autowired是来自Spring
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private DocMapperCustom docMapperCustom;
 
     @Resource
     private ContentMapper contentMapper;
@@ -122,6 +126,8 @@ public class DocService {
 
     public String findContent(Long id) {
         Content content = contentMapper.selectByPrimaryKey(id);
+        // 文档阅读数+1
+        docMapperCustom.increaseViewCount(id);
         if (content == null)
             return "";
         return content.getContent();
