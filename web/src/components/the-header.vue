@@ -27,19 +27,19 @@
           Content
         </router-link>
       </a-menu-item>
-      <a-menu-item key="2">
+      <a-menu-item key="2" :disabled="!user.id">
         <router-link to="/admin/ebook">
-          Admin
+          Ebook Admin
         </router-link>
       </a-menu-item>
-      <a-menu-item key="3">
+      <a-menu-item key="3" :disabled="!user.id">
         <router-link to="/admin/user">
           User Center
         </router-link>
       </a-menu-item>
-      <a-menu-item key="4">
+      <a-menu-item key="4" :disabled="!user.id">
         <router-link to="/admin/category">
-          Category
+          Category Admin
         </router-link>
       </a-menu-item>
       <a-menu-item key="5">
