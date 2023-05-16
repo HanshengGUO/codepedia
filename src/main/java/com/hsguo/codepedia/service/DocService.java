@@ -5,6 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.hsguo.codepedia.domain.Content;
 import com.hsguo.codepedia.domain.Doc;
 import com.hsguo.codepedia.domain.DocExample;
+import com.hsguo.codepedia.exception.BusinessException;
+import com.hsguo.codepedia.exception.BusinessExceptionCode;
 import com.hsguo.codepedia.mapper.ContentMapper;
 import com.hsguo.codepedia.mapper.DocMapper;
 import com.hsguo.codepedia.mapper.DocMapperCustom;
@@ -13,6 +15,8 @@ import com.hsguo.codepedia.req.DocSaveReq;
 import com.hsguo.codepedia.resp.DocQueryResp;
 import com.hsguo.codepedia.resp.PageResp;
 import com.hsguo.codepedia.utils.CopyUtil;
+import com.hsguo.codepedia.utils.RedisUtil;
+import com.hsguo.codepedia.utils.RequestContext;
 import com.hsguo.codepedia.utils.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +43,9 @@ public class DocService {
 
     @Resource
     private SnowFlake snowFlake;
+
+    @Resource
+    private RedisUtil redisUtil;
 
     public PageResp<DocQueryResp> list(DocQueryReq req) {
         DocExample docExample = new DocExample();
@@ -134,7 +141,14 @@ public class DocService {
     }
 
     public void vote(Long id) {
-        docMapperCustom.increaseVoteCount(id);
+        // docMapperCust.increaseVoteCount(id);
+        // 远程IP+doc.id作为key，24小时内不能重复
+        String ip = RequestContext.getRemoteAddr();
+        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 3600 * 24)) {
+            docMapperCustom.increaseVoteCount(id);
+        } else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
     }
 
     public void delete(List<String> ids) {
