@@ -18,6 +18,7 @@ import com.hsguo.codepedia.utils.CopyUtil;
 import com.hsguo.codepedia.utils.RedisUtil;
 import com.hsguo.codepedia.utils.RequestContext;
 import com.hsguo.codepedia.utils.SnowFlake;
+import com.hsguo.codepedia.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,9 @@ public class DocService {
 
     @Resource
     private RedisUtil redisUtil;
+
+    @Resource
+    public WebSocketServer webSocketServer;
 
     public PageResp<DocQueryResp> list(DocQueryReq req) {
         DocExample docExample = new DocExample();
@@ -149,6 +153,14 @@ public class DocService {
         } else {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
         }
+
+        // Push
+//        Doc docDB = docMapper.selectByPrimaryKey(id);
+        sendInfo();
+    }
+
+    public void sendInfo() {
+        webSocketServer.sendInfo("点赞成功！");
     }
 
     public void delete(List<String> ids) {

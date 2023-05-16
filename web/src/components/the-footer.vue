@@ -7,6 +7,7 @@
 <script lang="ts">
 import {defineComponent, onMounted} from 'vue';
 import {Tool} from "@/utils/tool";
+import {message} from "ant-design-vue";
 
 export default defineComponent({
   name: 'the-footer',
@@ -18,7 +19,7 @@ export default defineComponent({
       console.log('WebSocket连接成功，状态码：', websocket.readyState)
     };
     const onMessage = (event: any) => {
-      console.log('WebSocket收到消息：', event.data);
+      message.success(event.data);
     };
     const onError = () => {
       console.log('WebSocket连接错误，状态码：', websocket.readyState)
