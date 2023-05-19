@@ -1,6 +1,6 @@
 <template>
   <a-layout-header class="header">
-    <div class="logo"/>
+    <div class="logo">Codepedia</div>
     <a-popconfirm
         title="确认退出登录?"
         ok-text="是"
@@ -139,9 +139,22 @@ export default defineComponent({
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text&family=Kanit&display=swap');
+
 .login-menu {
   float: right;
   color: white;
   padding-left: 10px;
+}
+
+.logo {
+  width: 160px;
+  height: 31px;
+  /*background: rgba(255, 255, 255, 0.2);*/
+  margin: 0px 0px 0px 20px;
+  float: left;
+  color: white;
+  font-size: 24px;
+  font-family: 'Golos Text', sans-serif;
 }
 </style>
