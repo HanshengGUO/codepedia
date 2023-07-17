@@ -3,10 +3,10 @@ Welcome to Codepedia, a knowledge base designed specifically for developers. Thi
 ## Overview
 Codepedia aims to facilitate the creation, storage, and management of rich-text technical notes. It features an intuitive user interface that allows users to effortlessly navigate through the platform, create and modify notes, and manage categories.
 ## Features
-* 📝 Rich-Text Display: Codepedia supports a rich-text editor enabling seamless text formatting. This allows you to add style, emphasis, and personal touch to your notes, making them more engaging and readable.
-* 📚 Ebook Admin: As an Ebook Admin, you have the power to control the content on Codepedia. This includes the ability to modify, add, or delete ebooks using a fully functional editor, ensuring that the platform hosts top-notch, relevant content.
-* 👥 User Center: The User Center is where you can manage all the users on Codepedia. You can add or delete users, overseeing the community to maintain a safe, productive environment for knowledge exchange.
-* 📂 Category Admin: As a Category Admin, you can modify the categories and assign the ebooks to relevant categories. This ensures content is well-organized and easily accessible, enhancing the user experience on Codepedia.
+* 📝 **Rich-Text Display**: Codepedia supports a rich-text editor enabling seamless text formatting. This allows you to add style, emphasis, and personal touch to your notes, making them more engaging and readable.
+* 📚 **Ebook Admin**: As an Ebook Admin, you have the power to control the content on Codepedia. This includes the ability to modify, add, or delete ebooks using a fully functional editor, ensuring that the platform hosts top-notch, relevant content.
+* 👥 **User Center**: The User Center is where you can manage all the users on Codepedia. You can add or delete users, overseeing the community to maintain a safe, productive environment for knowledge exchange.
+* 📂 **Category Admin**: As a Category Admin, you can modify the categories and assign the ebooks to relevant categories. This ensures content is well-organized and easily accessible, enhancing the user experience on Codepedia.
 
 ## Tech Stack
 Codepedia is a full stack project with a primary focus on backend development. The technology stack used in this project is as follows:
